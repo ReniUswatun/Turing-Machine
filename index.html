@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Turing Machine</title>
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/gh/rizalanggoro/js-utilities@1.0.1+2/turing-machine-simulation.js"></script>
+  </head>
+  <body x-data>
+    <input type="text" x-model="$store.engine.a" />
+    <input type="text" x-model="$store.engine.b" />
+    <button x-on:click="$store.engine.next()">Next</button>
+
+    <h1>Buat Debug Aja</h1>
+    <p>current state: <span x-text="$store.engine.currentState"></span></p>
+    <p x-text="JSON.stringify($store.engine.tape1)"></p>
+    <p x-text="JSON.stringify($store.engine.tape2)"></p>
+
+    <!-- ceritanya tape -->
+    <div>
+      <template x-for="tape in [$store.engine.tape1, $store.engine.tape2]">
+        <div style="display: flex; align-items: center; gap: 8px">
+          <!-- left -->
+          <div style="display: flex; flex-direction: row-reverse; gap: 4px">
+            <template x-for="a in 30">
+              <p
+                x-data="{
+                getContent: () => {
+                  let content = 'b'
+  
+                  const headIndex = tape.findIndex((it) => it.head === true);
+                  const newIndex = headIndex - a;
+                  if (newIndex > -1) {
+                    content = tape[newIndex].content;
+                  }
+  
+                  return content
+                }
+              }"
+                x-text="getContent()"
+                style="text-transform: uppercase"
+              ></p>
+            </template>
+          </div>
+
+          <!-- center -->
+          <h1
+            x-text="tape.find(it => it.head === true)?.content ?? 'b'"
+            style="text-transform: uppercase"
+          ></h1>
+
+          <!-- right -->
+          <div style="display: flex; gap: 4px">
+            <template x-for="a in 30">
+              <p
+                x-data="{
+                getContent: () => {
+                  let content = 'b'
+  
+                  const headIndex = tape.findIndex((it) => it.head === true);
+                  const newIndex = headIndex + a;
+                  if (tape.length > newIndex) {
+                    content = tape[newIndex].content;
+                  }
+  
+                  return content
+                }
+              }"
+                x-text="getContent()"
+                style="text-transform: uppercase"
+              ></p>
+            </template>
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <!-- transisi maybe -->
+    <div>
+      <h2>Transisi</h2>
+      <template x-for="t in $store.engine.transitions">
+        <p
+          x-text="`d(${t.from}, ${t.input}) => (${t.to}, ${t.replace}, ${t.direction})`"
+        ></p>
+      </template>
+    </div>
+    <script src="./ruleset/add.js"></script>
+    <script>
+      const myTuring = Turing(addtionRuleSet);
+
+      document.addEventListener("alpine:init", () => {
+        Alpine.store("engine", {
+          a: "",
+          b: "00",
+          tape1: [],
+          tape2: [],
+          currentState: "q0",
+          transitions: [],
+
+          next() {
+            if (this.tape1.length === 0) {
+              const input = this.a + "1" + this.b;
+              this.tape1.push(
+                ...input
+                  .split("")
+                  .map((item, index) => ({ content: item, head: index === 0 }))
+              );
+              this.tape2.push({ content: "b", head: true });
+            } else {
+              const result = myTuring.move({
+                currentState: this.currentState,
+                tapeData: [this.tape1, this.tape2],
+              });
+
+              if (result) {
+                const { newTapeData, transition } = result;
+                this.tape1 = newTapeData[0];
+                this.tape2 = newTapeData[1];
+                this.currentState = transition.to;
+                this.transitions.splice(0, 0, transition);
+                console.log({ transition });
+              }
+            }
+          },
+        });
+      });
+    </script>
+  </body>
+</html>
