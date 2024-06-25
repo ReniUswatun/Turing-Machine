@@ -4,32 +4,157 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Turing Machine</title>
-    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script
       defer
       src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"
     ></script>
     <script src="https://cdn.jsdelivr.net/gh/rizalanggoro/js-utilities@1.0.1+2/turing-machine-simulation.js"></script>
+    <!-- Rumus Matematika -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [
+            ["$", "$"],
+            ["\\(", "\\)"],
+          ],
+        },
+      };
+    </script>
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+    ></script>
   </head>
-  <body x-data>
-    <input type="text" x-model="$store.engine.a" />
-    <input type="text" x-model="$store.engine.b" />
-    <button x-on:click="$store.engine.next()">Next</button>
+  <body>
+    <nav class="bg-white border-gray-200">
+      <div
+        class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"
+      >
+        <a
+          href="https://flowbite.com/"
+          class="flex items-center space-x-3 rtl:space-x-reverse"
+        >
+          <span
+            class="ml-6 self-center text-2xl font-semibold whitespace-nowrap"
+            >Turing Machine</span
+          >
+        </a>
+      </div>
+    </nav>
+    <main class="max-w-lg h-full mx-auto justify-center items-center" x-data>
+      <div>
+        <h5
+          class="m-4 text-3xl font-semibold text-gray-900 flex justify-center"
+        >
+          Rumus
+        </h5>
+        <p class="m-6 text-3xl font-semibold text-gray-900 flex justify-center">
+          $x=\frac{(m+n)^{a}}{b}$
+        </p>
+      </div>
+      <div
+        class="max-w-lg p-6 bg-white border border-gray-200 rounded-lg shadow"
+      >
+        <div>
+          <p class="mb-3 font-normal text-gray-700">Nilai m</p>
+          <input
+            type="text"
+            x-model="$store.engineAdd.m"
+            class="block w-full p-2 ps-4 text-md text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Masukkan Nilai m"
+          />
+        </div>
+        <div>
+          <p class="my-3 font-normal text-gray-700">Nilai n</p>
+          <input
+            type="text"
+            x-model="$store.engineAdd.n"
+            class="block w-full p-2 ps-4 text-md text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Masukkan Nilai n"
+          />
+        </div>
+        <div>
+          <p class="my-3 font-normal text-gray-700">Nilai a</p>
+          <input
+            type="text"
+            x-model="$store.enginePower.a"
+            class="block w-full p-2 ps-4 text-md text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Masukkan Nilai a"
+          />
+        </div>
+        <div>
+          <p class="my-3 font-normal text-gray-700">Nilai b</p>
+          <input
+            type="text"
+            x-model="$store.engineDiv.b"
+            class="block w-full p-2 ps-4 text-md text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Masukkan Nilai b"
+            required
+          />
+        </div>
+      </div>
+      <div
+        class="flex justify-around max-w-lg p-4 bg-white border border-gray-200 rounded-lg shadow mt-2"
+      >
+        <div class="m-2 text-lg"><span>Simulasi Pertambahan</span></div>
+        <div>
+          <button
+            x-on:click="$store.engineAdd.reset()"
+            type="button"
+            class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2.5 me-2"
+          >
+            Reset
+          </button>
+          <button
+            x-on:click="$store.engineAdd.simulate()"
+            type="button"
+            class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-4 py-2.5 me-2"
+          >
+            Simulate
+          </button>
+          <button
+            x-on:click="$store.engineAdd.next()"
+            type="button"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 me-2"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+      <div class="max-w-lg h-full mx-auto justify-center items-center my-4">
+        <p>
+          String Result :
+          <span x-text="$store.engineAdd.getResult().asString"></span>
+        </p>
 
-    <h1>Buat Debug Aja</h1>
-    <p>current state: <span x-text="$store.engine.currentState"></span></p>
-    <p x-text="JSON.stringify($store.engine.tape1)"></p>
-    <p x-text="JSON.stringify($store.engine.tape2)"></p>
+        <p class="mt-2">
+          Number Result :
+          <span x-text="$store.engineAdd.getResult().asNumber"></span>
+        </p>
+        <p class="mt-2">
+          current state: <span x-text="$store.engineAdd.currentState"></span>
+        </p>
+      </div>
 
-    <!-- ceritanya tape -->
-    <div>
-      <template x-for="tape in [$store.engine.tape1, $store.engine.tape2]">
-        <div style="display: flex; align-items: center; gap: 8px">
-          <!-- left -->
-          <div style="display: flex; flex-direction: row-reverse; gap: 4px">
-            <template x-for="a in 30">
-              <p
-                x-data="{
+      <!-- <p x-text="JSON.stringify($store.engineAdd.tape1)"></p>
+      <p x-text="JSON.stringify($store.engineAdd.tape2)"></p> -->
+
+      <!-- ceritanya tape -->
+      <div class="max-w-lg overflow-x-auto">
+        <template
+          x-for="tape in [$store.engineAdd.tape1, $store.engineAdd.tape2]"
+        >
+          <div class="flex items-center gap-4 my-2">
+            <!-- left -->
+            <div class="flex row-reverse gap-2">
+              <template x-for="a in 30">
+                <div
+                  class="max-w-sm p-3 bg-white border border-gray-200 rounded-lg"
+                >
+                  <p
+                    x-data="{
                 getContent: () => {
                   let content = 'b'
   
@@ -42,23 +167,31 @@
                   return content
                 }
               }"
-                x-text="getContent()"
-                style="text-transform: uppercase"
-              ></p>
-            </template>
-          </div>
+                    x-text="getContent()"
+                    style="text-transform: uppercase"
+                  ></p>
+                </div>
+              </template>
+            </div>
 
-          <!-- center -->
-          <h1
-            x-text="tape.find(it => it.head === true)?.content ?? 'b'"
-            style="text-transform: uppercase"
-          ></h1>
+            <!-- center -->
+            <div
+              class="max-w-sm p-3 bg-purple-200 border border-gray-200 rounded-lg"
+            >
+              <h1
+                x-text="tape.find(it => it.head === true)?.content ?? 'b'"
+                class="uppercase text-lg font-bold"
+              ></h1>
+            </div>
 
-          <!-- right -->
-          <div style="display: flex; gap: 4px">
-            <template x-for="a in 30">
-              <p
-                x-data="{
+            <!-- right -->
+            <div class="flex row-reverse gap-2">
+              <template x-for="a in 30">
+                <div
+                  class="max-w-sm p-3 bg-white border border-gray-200 rounded-lg"
+                >
+                  <p
+                    x-data="{
                 getContent: () => {
                   let content = 'b'
   
@@ -71,64 +204,557 @@
                   return content
                 }
               }"
-                x-text="getContent()"
-                style="text-transform: uppercase"
-              ></p>
-            </template>
+                    x-text="getContent()"
+                    style="text-transform: uppercase"
+                  ></p>
+                </div>
+              </template>
+            </div>
           </div>
+        </template>
+      </div>
+
+      <!-- transisi maybe -->
+
+      <div class="mt-4 max-w-lg">
+        <div class="bg-white p-4 shadow-md rounded-lg mb-4">
+          <h2 class="text-lg font-semibold mb-2">Transisi</h2>
+          <template x-for="(t, index) in $store.engineAdd.transitions">
+            <div class="border-t border-gray-200 pt-2 mt-2">
+              <span
+                class="text-sm"
+                x-text="`d(${t.from}, ${t.input}) => (${t.to}, ${t.replace}, ${t.direction})`"
+              ></span>
+            </div>
+          </template>
         </div>
-      </template>
-    </div>
+      </div>
 
-    <!-- transisi maybe -->
-    <div>
-      <h2>Transisi</h2>
-      <template x-for="t in $store.engine.transitions">
-        <p
-          x-text="`d(${t.from}, ${t.input}) => (${t.to}, ${t.replace}, ${t.direction})`"
-        ></p>
-      </template>
-    </div>
-    <script src="./ruleset/add.js"></script>
-    <script>
-      const myTuring = Turing(addtionRuleSet);
+      <img src="./image/pertambahan.png" alt="Diagram Pertambahan" />
 
-      document.addEventListener("alpine:init", () => {
-        Alpine.store("engine", {
-          a: "",
-          b: "00",
-          tape1: [],
-          tape2: [],
-          currentState: "q0",
-          transitions: [],
+      <!-- Perpangkatan -->
+      <div
+        class="flex justify-around max-w-lg p-4 bg-white border border-gray-200 rounded-lg shadow mt-2"
+      >
+        <div class="m-2 text-lg"><span>Simulasi Perpangkatan</span></div>
+        <div>
+          <button
+            x-on:click="$store.enginePower.reset()"
+            type="button"
+            class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2.5 me-2"
+          >
+            Reset
+          </button>
+          <button
+            x-on:click="$store.enginePower.simulate()"
+            type="button"
+            class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-4 py-2.5 me-2"
+          >
+            Simulate
+          </button>
+          <button
+            x-on:click="$store.enginePower.next()"
+            type="button"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 me-2"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+      <div class="max-w-lg h-full mx-auto justify-center items-center my-4">
+        <p>
+          String Result :
+          <span x-text="$store.enginePower.getResult().asString"></span>
+        </p>
 
-          next() {
-            if (this.tape1.length === 0) {
-              const input = this.a + "1" + this.b;
-              this.tape1.push(
-                ...input
-                  .split("")
-                  .map((item, index) => ({ content: item, head: index === 0 }))
-              );
-              this.tape2.push({ content: "b", head: true });
-            } else {
-              const result = myTuring.move({
-                currentState: this.currentState,
-                tapeData: [this.tape1, this.tape2],
-              });
+        <p class="mt-2">
+          Number Result :
+          <span x-text="$store.enginePower.getResult().asNumber"></span>
+        </p>
+        <p class="mt-2">
+          current state: <span x-text="$store.enginePower.currentState"></span>
+        </p>
+      </div>
 
-              if (result) {
-                const { newTapeData, transition } = result;
-                this.tape1 = newTapeData[0];
-                this.tape2 = newTapeData[1];
-                this.currentState = transition.to;
-                this.transitions.splice(0, 0, transition);
-                console.log({ transition });
+      <!-- <p x-text="JSON.stringify($store.engineAdd.tape1)"></p>
+      <p x-text="JSON.stringify($store.engineAdd.tape2)"></p> -->
+
+      <!-- ceritanya tape -->
+      <div class="max-w-lg overflow-x-auto">
+        <template
+          x-for="tape in [$store.enginePower.tape1, $store.enginePower.tape2,$store.enginePower.tape3,$store.enginePower.tape4]"
+        >
+          <div class="flex items-center gap-4 my-2">
+            <!-- left -->
+            <div class="flex row-reverse gap-2">
+              <template x-for="a in 30">
+                <div
+                  class="max-w-sm p-3 bg-white border border-gray-200 rounded-lg"
+                >
+                  <p
+                    x-data="{
+                getContent: () => {
+                  let content = 'b'
+  
+                  const headIndex = tape.findIndex((it) => it.head === true);
+                  const newIndex = headIndex - a;
+                  if (newIndex > -1) {
+                    content = tape[newIndex].content;
+                  }
+  
+                  return content
+                }
+              }"
+                    x-text="getContent()"
+                    style="text-transform: uppercase"
+                  ></p>
+                </div>
+              </template>
+            </div>
+
+            <!-- center -->
+            <div
+              class="max-w-sm p-3 bg-purple-200 border border-gray-200 rounded-lg"
+            >
+              <h1
+                x-text="tape.find(it => it.head === true)?.content ?? 'b'"
+                class="uppercase text-lg font-bold"
+              ></h1>
+            </div>
+
+            <!-- right -->
+            <div class="flex row-reverse gap-2">
+              <template x-for="a in 30">
+                <div
+                  class="max-w-sm p-3 bg-white border border-gray-200 rounded-lg"
+                >
+                  <p
+                    x-data="{
+                getContent: () => {
+                  let content = 'b'
+  
+                  const headIndex = tape.findIndex((it) => it.head === true);
+                  const newIndex = headIndex + a;
+                  if (tape.length > newIndex) {
+                    content = tape[newIndex].content;
+                  }
+  
+                  return content
+                }
+              }"
+                    x-text="getContent()"
+                    style="text-transform: uppercase"
+                  ></p>
+                </div>
+              </template>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!-- transisi maybe -->
+
+      <div class="mt-4 max-w-lg">
+        <div class="bg-white p-4 shadow-md rounded-lg mb-4">
+          <h2 class="text-lg font-semibold mb-2">Transisi</h2>
+          <template x-for="(t, index) in $store.enginePower.transitions">
+            <div class="border-t border-gray-200 pt-2 mt-2">
+              <span
+                class="text-sm"
+                x-text="`d(${t.from}, ${t.input}) => (${t.to}, ${t.replace}, ${t.direction})`"
+              ></span>
+            </div>
+          </template>
+        </div>
+      </div>
+      <img src="./image/perpangkatan.png" alt="Diagram Perpangkat" />
+
+      <!-- Pembagian -->
+      <div
+        class="flex justify-around max-w-lg p-4 bg-white border border-gray-200 rounded-lg shadow mt-2"
+      >
+        <div class="m-2 text-lg"><span>Simulasi Pembagian</span></div>
+        <div>
+          <button
+            x-on:click="$store.engineDiv.reset()"
+            type="button"
+            class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2.5 me-2"
+          >
+            Reset
+          </button>
+          <button
+            x-on:click="$store.engineDiv.simulate()"
+            type="button"
+            class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-4 py-2.5 me-2"
+          >
+            Simulate
+          </button>
+          <button
+            x-on:click="$store.engineDiv.next()"
+            type="button"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 me-2"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+      <div class="max-w-lg h-full mx-auto justify-center items-center my-4">
+        <p>
+          String Result :
+          <span x-text="$store.engineDiv.getResult().asString"></span>
+        </p>
+
+        <p class="mt-2">
+          Number Result :
+          <span x-text="$store.engineDiv.getResult().asNumber"></span>
+        </p>
+        <p class="mt-2">
+          current state: <span x-text="$store.engineDiv.currentState"></span>
+        </p>
+      </div>
+
+      <!-- <p x-text="JSON.stringify($store.engineAdd.tape1)"></p>
+      <p x-text="JSON.stringify($store.engineAdd.tape2)"></p> -->
+
+      <!-- ceritanya tape -->
+      <div class="max-w-lg overflow-x-auto">
+        <template
+          x-for="tape in [$store.engineDiv.tape1, $store.engineDiv.tape2, $store.engineDiv.tape3]"
+        >
+          <div class="flex items-center gap-4 my-2">
+            <!-- left -->
+            <div class="flex row-reverse gap-2">
+              <template x-for="a in 30">
+                <div
+                  class="max-w-sm p-3 bg-white border border-gray-200 rounded-lg"
+                >
+                  <p
+                    x-data="{
+                getContent: () => {
+                  let content = 'b'
+  
+                  const headIndex = tape.findIndex((it) => it.head === true);
+                  const newIndex = headIndex - a;
+                  if (newIndex > -1) {
+                    content = tape[newIndex].content;
+                  }
+  
+                  return content
+                }
+              }"
+                    x-text="getContent()"
+                    style="text-transform: uppercase"
+                  ></p>
+                </div>
+              </template>
+            </div>
+
+            <!-- center -->
+            <div
+              class="max-w-sm p-3 bg-purple-200 border border-gray-200 rounded-lg"
+            >
+              <h1
+                x-text="tape.find(it => it.head === true)?.content ?? 'b'"
+                class="uppercase text-lg font-bold"
+              ></h1>
+            </div>
+
+            <!-- right -->
+            <div class="flex row-reverse gap-2">
+              <template x-for="a in 30">
+                <div
+                  class="max-w-sm p-3 bg-white border border-gray-200 rounded-lg"
+                >
+                  <p
+                    x-data="{
+                getContent: () => {
+                  let content = 'b'
+  
+                  const headIndex = tape.findIndex((it) => it.head === true);
+                  const newIndex = headIndex + a;
+                  if (tape.length > newIndex) {
+                    content = tape[newIndex].content;
+                  }
+  
+                  return content
+                }
+              }"
+                    x-text="getContent()"
+                    style="text-transform: uppercase"
+                  ></p>
+                </div>
+              </template>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!-- transisi maybe -->
+
+      <div class="mt-4 max-w-lg">
+        <div class="bg-white p-4 shadow-md rounded-lg mb-4">
+          <h2 class="text-lg font-semibold mb-2">Transisi</h2>
+          <template x-for="(t, index) in $store.engineAdd.transitions">
+            <div class="border-t border-gray-200 pt-2 mt-2">
+              <span
+                class="text-sm"
+                x-text="`d(${t.from}, ${t.input}) => (${t.to}, ${t.replace}, ${t.direction})`"
+              ></span>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <img src="./image/pembagian.png" alt="Diagram Pembagian" />
+
+      <!-- Mengumpulkan Rule -->
+      <script src="./ruleset/add.js"></script>
+      <script src="./ruleset/dividen.js"></script>
+      <script src="./ruleset/power.js"></script>
+      <script>
+        const myTuringAdd = Turing(addtionRuleSet);
+        const myTuringDiv = Turing(divideRuleSet);
+        const myTuringPower = Turing(powerRuleSet);
+
+        document.addEventListener("alpine:init", () => {
+          Alpine.store("engineAdd", {
+            m: "",
+            n: "",
+            tape1: [],
+            tape2: [],
+            currentState: "q0",
+            transitions: [],
+            result: "",
+            resultNumber: 0,
+            isAcceptReached: false,
+
+            next() {
+              if (this.tape1.length === 0) {
+                const input = this.m + "1" + this.n;
+                this.tape1.push(
+                  ...input.split("").map((item, index) => ({
+                    content: item,
+                    head: index === 0,
+                  }))
+                );
+                this.tape2.push({ content: "b", head: true });
+              } else {
+                if (!this.isAcceptReached) {
+                  const result = myTuringAdd.move({
+                    currentState: this.currentState,
+                    tapeData: [this.tape1, this.tape2],
+                  });
+                  console.log({ result });
+
+                  if (result) {
+                    const { newTapeData, transition } = result;
+                    this.tape1 = newTapeData[0];
+                    this.tape2 = newTapeData[1];
+                    this.currentState = transition.to;
+                    this.transitions.splice(0, 0, transition);
+                    console.log({ transition });
+
+                    if (result.transition.to === "accept") {
+                      this.result = this.tape2
+                        .map((it) => it.content)
+                        .join("")
+                        .replace(/1/g, "");
+                      this.resultNumber = this.result.length;
+                      console.log("Accepted state reached. Halting.");
+                      this.isAcceptReached = true;
+                    }
+                  }
+                }
               }
-            }
-          },
+            },
+            reset() {
+              this.tape1 = [];
+              this.tape2 = [];
+              this.currentState = "q0";
+              this.transitions = [];
+            },
+            getResult() {
+              return {
+                asNumber: this.resultNumber,
+                asString: this.result,
+              };
+            },
+            simulate() {
+              const interval = setInterval(() => {
+                if (this.currentState === "accept") {
+                  clearInterval(interval);
+                  console.log(this.getResult());
+                } else {
+                  this.next();
+                }
+              }, 100); // Adjust the interval as needed
+            },
+          });
+          Alpine.store("enginePower", {
+            x: "",
+            a: "",
+            tape1: [],
+            tape2: [],
+            tape3: [],
+            tape4: [],
+            currentState: "q0",
+            transitions: [],
+            result: "",
+            resultNumber: 0,
+            isAcceptReached: false,
+
+            next() {
+              this.x = Alpine.store("engineAdd").getResult().asString;
+              if (this.tape1.length === 0) {
+                const input = this.x + "1" + this.a;
+                this.tape1.push(
+                  ...input.split("").map((item, index) => ({
+                    content: item,
+                    head: index === 0,
+                  }))
+                );
+                this.tape2.push({ content: "b", head: true });
+                this.tape3.push({ content: "b", head: true });
+                this.tape4.push({ content: "b", head: true });
+              } else {
+                if (!this.isAcceptReached) {
+                  const result = myTuringPower.move({
+                    currentState: this.currentState,
+                    tapeData: [this.tape1, this.tape2, this.tape3, this.tape4],
+                  });
+                  console.log({ result });
+
+                  if (result) {
+                    const { newTapeData, transition } = result;
+                    this.tape1 = newTapeData[0];
+                    this.tape2 = newTapeData[1];
+                    this.tape3 = newTapeData[2];
+                    this.tape4 = newTapeData[3];
+                    this.currentState = transition.to;
+                    this.transitions.splice(0, 0, transition);
+                    console.log({ transition });
+
+                    if (result.transition.to === "accept") {
+                      this.result = this.tape4
+                        .map((it) => it.content)
+                        .join("")
+                        .replace(/1/g, "")
+                        .replace(/b/g, "");
+                      this.resultNumber = this.result.length;
+                      console.log("Accepted state reached. Halting.");
+                      this.isAcceptReached = true;
+                    }
+                  }
+                }
+              }
+            },
+            reset() {
+              this.tape1 = [];
+              this.tape2 = [];
+              this.tape3 = [];
+              this.tape4 = [];
+              this.currentState = "q0";
+              this.transitions = [];
+            },
+            getResult() {
+              return {
+                asNumber: this.resultNumber,
+                asString: this.result,
+              };
+            },
+            simulate() {
+              const interval = setInterval(() => {
+                if (this.currentState === "accept") {
+                  clearInterval(interval);
+                  console.log(this.getResult());
+                } else {
+                  this.next();
+                }
+              }, 100); // Adjust the interval as needed
+            },
+          });
+          Alpine.store("engineDiv", {
+            s: "",
+            b: "",
+            tape1: [],
+            tape2: [],
+            tape3: [],
+            currentState: "q0",
+            transitions: [],
+            result: "",
+            resultNumber: 0,
+            isAcceptReached: false,
+
+            next() {
+              this.s = Alpine.store("enginePower").getResult().asString;
+              if (this.tape1.length === 0) {
+                const input = this.s + "1" + this.b;
+                this.tape1.push(
+                  ...input.split("").map((item, index) => ({
+                    content: item,
+                    head: index === 0,
+                  }))
+                );
+                this.tape2.push({ content: "b", head: true });
+                this.tape3.push({ content: "b", head: true });
+              } else {
+                if (!this.isAcceptReached) {
+                  const result = myTuringDiv.move({
+                    currentState: this.currentState,
+                    tapeData: [this.tape1, this.tape2, this.tape3],
+                  });
+                  console.log({ result });
+
+                  if (result) {
+                    const { newTapeData, transition } = result;
+                    this.tape1 = newTapeData[0];
+                    this.tape2 = newTapeData[1];
+                    this.tape3 = newTapeData[2];
+                    this.currentState = transition.to;
+                    this.transitions.splice(0, 0, transition);
+                    console.log({ transition });
+
+                    if (result.transition.to === "accept") {
+                      this.result = this.tape3
+                        .map((it) => it.content)
+                        .join("")
+                        .replace(/1/g, "")
+                        .replace(/b/g, "");
+                      this.resultNumber = this.result.length;
+                      console.log("Accepted state reached. Halting.");
+                      this.isAcceptReached = true;
+                    }
+                  }
+                }
+              }
+            },
+            reset() {
+              this.tape1 = [];
+              this.tape2 = [];
+              this.tape3 = [];
+              this.currentState = "q0";
+              this.transitions = [];
+            },
+            getResult() {
+              return {
+                asNumber: this.resultNumber,
+                asString: this.result,
+              };
+            },
+            simulate() {
+              const interval = setInterval(() => {
+                if (this.currentState === "accept") {
+                  clearInterval(interval);
+                  console.log(this.getResult());
+                } else {
+                  this.next();
+                }
+              }, 100); // Adjust the interval as needed
+            },
+          });
         });
-      });
-    </script>
+      </script>
+    </main>
+    <footer class="my-2 text-center">Maaf jika tidak sesuai harapan</footer>
   </body>
 </html>
